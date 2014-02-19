@@ -3961,6 +3961,8 @@ static void ironlake_crtc_enable(struct drm_crtc *crtc)
 	 * happening.
 	 */
 	intel_wait_for_vblank(dev, intel_crtc->pipe);
+
+	drm_vblank_on(dev, pipe);
 }
 
 /* IPS only exists on ULT machines and is tied to pipe A. */
@@ -4052,6 +4054,8 @@ static void haswell_crtc_enable(struct drm_crtc *crtc)
 	 * to change the workaround. */
 	haswell_mode_set_planes_workaround(intel_crtc);
 	intel_crtc_enable_planes(crtc);
+
+	drm_vblank_on(dev, pipe);
 }
 
 static void ironlake_pfit_disable(struct intel_crtc *crtc)
@@ -4530,6 +4534,7 @@ static void valleyview_crtc_enable(struct drm_crtc *crtc)
 		encoder->enable(encoder);
 
 	intel_crtc_enable_planes(crtc);
+	drm_vblank_on(dev, pipe);
 }
 
 static void i9xx_crtc_enable(struct drm_crtc *crtc)
@@ -4564,6 +4569,7 @@ static void i9xx_crtc_enable(struct drm_crtc *crtc)
 		encoder->enable(encoder);
 
 	intel_crtc_enable_planes(crtc);
+	drm_vblank_on(dev, pipe);
 }
 
 static void i9xx_pfit_disable(struct intel_crtc *crtc)
