@@ -1886,7 +1886,6 @@ static void intel_disable_dp(struct intel_encoder *encoder)
 	intel_edp_backlight_off(intel_dp);
 	intel_dp_sink_dpms(intel_dp, DRM_MODE_DPMS_OFF);
 	intel_edp_panel_off(intel_dp);
-	edp_panel_vdd_off(intel_dp, true);
 
 	/* cpu edp my only be disable _after_ the cpu pipe/plane is disabled. */
 	if (!(port == PORT_A || IS_VALLEYVIEW(dev)))
