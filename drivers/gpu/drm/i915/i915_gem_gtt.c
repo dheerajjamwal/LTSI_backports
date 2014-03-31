@@ -1974,6 +1974,10 @@ int i915_gem_gtt_init(struct drm_device *dev)
 		 gtt->base.total >> 20);
 	DRM_DEBUG_DRIVER("GMADR size = %ldM\n", gtt->mappable_end >> 20);
 	DRM_DEBUG_DRIVER("GTT stolen size = %zdM\n", gtt->stolen_size >> 20);
+#ifdef CONFIG_INTEL_IOMMU
+	if (intel_iommu_gfx_mapped)
+		DRM_INFO("VT-d active for gfx access\n");
+#endif
 	/*
 	 * i915.enable_ppgtt is read-only, so do an early pass to validate the
 	 * user's requested state against the hardware/driver capabilities.  We
