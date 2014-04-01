@@ -481,7 +481,7 @@ static bool intel_fbdev_init_bios(struct drm_device *dev,
 	list_for_each_entry(crtc, &dev->mode_config.crtc_list, head) {
 		intel_crtc = to_intel_crtc(crtc);
 
-		if (!intel_crtc->active || !crtc->fb) {
+		if (!intel_crtc->active || !crtc->primary->fb) {
 			DRM_DEBUG_KMS("pipe %c not active or no fb, skipping\n",
 				      pipe_name(intel_crtc->pipe));
 			continue;
@@ -491,7 +491,7 @@ static bool intel_fbdev_init_bios(struct drm_device *dev,
 			DRM_DEBUG_KMS("found possible fb from plane %c\n",
 				      pipe_name(intel_crtc->pipe));
 			plane_config = &intel_crtc->plane_config;
-			fb = to_intel_framebuffer(crtc->fb);
+			fb = to_intel_framebuffer(crtc->primary->fb);
 			max_size = plane_config->size;
 		}
 	}
@@ -560,7 +560,7 @@ static bool intel_fbdev_init_bios(struct drm_device *dev,
 		if (!intel_crtc->active)
 			continue;
 
-		WARN(!crtc->fb,
+		WARN(!crtc->primary->fb,
 		     "re-used BIOS config but lost an fb on crtc %d\n",
 		     crtc->base.id);
 	}
