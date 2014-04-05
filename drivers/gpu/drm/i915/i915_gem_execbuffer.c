@@ -1180,6 +1180,7 @@ i915_gem_do_execbuffer(struct drm_device *dev, void *data,
 
 	eb = eb_create(args);
 	if (eb == NULL) {
+		i915_gem_context_unreference(ctx);
 		mutex_unlock(&dev->struct_mutex);
 		ret = -ENOMEM;
 		goto pre_mutex_err;
