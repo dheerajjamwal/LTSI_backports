@@ -4615,6 +4615,15 @@ static void valleyview_crtc_enable(struct drm_crtc *crtc)
 	drm_vblank_on(dev, pipe);
 }
 
+static void i9xx_set_pll_dividers(struct intel_crtc *crtc)
+{
+	struct drm_device *dev = crtc->base.dev;
+	struct drm_i915_private *dev_priv = dev->dev_private;
+
+	I915_WRITE(FP0(crtc->pipe), crtc->config.dpll_hw_state.fp0);
+	I915_WRITE(FP1(crtc->pipe), crtc->config.dpll_hw_state.fp1);
+}
+
 static void i9xx_crtc_enable(struct drm_crtc *crtc)
 {
 	struct drm_device *dev = crtc->dev;
@@ -4629,6 +4638,8 @@ static void i9xx_crtc_enable(struct drm_crtc *crtc)
 
 	if (intel_crtc->active)
 		return;
+
+	i9xx_set_pll_dividers(intel_crtc);
 
 	/* Set up the display plane register */
 	dspcntr = DISPPLANE_GAMMA_ENABLE;
@@ -5272,8 +5283,6 @@ static void i9xx_update_pll_dividers(struct intel_crtc *crtc,
 				     intel_clock_t *reduced_clock)
 {
 	struct drm_device *dev = crtc->base.dev;
-	struct drm_i915_private *dev_priv = dev->dev_private;
-	int pipe = crtc->pipe;
 	u32 fp, fp2 = 0;
 
 	if (IS_PINEVIEW(dev)) {
@@ -5286,17 +5295,14 @@ static void i9xx_update_pll_dividers(struct intel_crtc *crtc,
 			fp2 = i9xx_dpll_compute_fp(reduced_clock);
 	}
 
-	I915_WRITE(FP0(pipe), fp);
 	crtc->config.dpll_hw_state.fp0 = fp;
 
 	crtc->lowfreq_avail = false;
 	if (intel_pipe_has_type(&crtc->base, INTEL_OUTPUT_LVDS) &&
 	    reduced_clock && i915.powersave) {
-		I915_WRITE(FP1(pipe), fp2);
 		crtc->config.dpll_hw_state.fp1 = fp2;
 		crtc->lowfreq_avail = true;
 	} else {
-		I915_WRITE(FP1(pipe), fp);
 		crtc->config.dpll_hw_state.fp1 = fp;
 	}
 }
