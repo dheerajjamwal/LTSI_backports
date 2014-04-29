@@ -387,8 +387,7 @@ done:
 }
 EXPORT_SYMBOL(drm_crtc_helper_set_mode);
 
-
-static int
+static void
 drm_crtc_helper_disable(struct drm_crtc *crtc)
 {
 	struct drm_device *dev = crtc->dev;
@@ -417,7 +416,6 @@ drm_crtc_helper_disable(struct drm_crtc *crtc)
 	}
 
 	__drm_helper_disable_unused_functions(dev);
-	return 0;
 }
 
 /**
@@ -468,7 +466,8 @@ int drm_crtc_helper_set_config(struct drm_mode_set *set)
 				(int)set->num_connectors, set->x, set->y);
 	} else {
 		DRM_DEBUG_KMS("[CRTC:%d] [NOFB]\n", set->crtc->base.id);
-		return drm_crtc_helper_disable(set->crtc);
+		drm_crtc_helper_disable(set->crtc);
+		return 0;
 	}
 
 	dev = set->crtc->dev;
