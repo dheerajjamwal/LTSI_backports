@@ -2312,7 +2312,7 @@ static void intel_find_plane_obj(struct intel_crtc *intel_crtc,
 	 * Failed to alloc the obj, check to see if we should share
 	 * an fb with another CRTC instead
 	 */
-	list_for_each_entry(c, &dev->mode_config.crtc_list, head) {
+	for_each_crtc(dev, c) {
 		i = to_intel_crtc(c);
 
 		if (c == &intel_crtc->base)
@@ -2540,7 +2540,7 @@ void intel_display_handle_reset(struct drm_device *dev)
 	 * pending_flip_queue really got woken up.
 	 */
 
-	list_for_each_entry(crtc, &dev->mode_config.crtc_list, head) {
+	for_each_crtc(dev, crtc) {
 		struct intel_crtc *intel_crtc = to_intel_crtc(crtc);
 		enum plane plane = intel_crtc->plane;
 
@@ -2548,7 +2548,7 @@ void intel_display_handle_reset(struct drm_device *dev)
 		intel_finish_page_flip_plane(dev, plane);
 	}
 
-	list_for_each_entry(crtc, &dev->mode_config.crtc_list, head) {
+	for_each_crtc(dev, crtc) {
 		struct intel_crtc *intel_crtc = to_intel_crtc(crtc);
 
 		mutex_lock(&crtc->mutex);
@@ -8291,7 +8291,7 @@ bool intel_get_load_detect_pipe(struct drm_connector *connector,
 	}
 
 	/* Find an unused one (if possible) */
-	list_for_each_entry(possible_crtc, &dev->mode_config.crtc_list, head) {
+	for_each_crtc(dev, possible_crtc) {
 		i++;
 		if (!(encoder->possible_crtcs & (1 << i)))
 			continue;
@@ -8682,7 +8682,7 @@ void intel_mark_idle(struct drm_device *dev)
 	if (!i915.powersave)
 		goto out;
 
-	list_for_each_entry(crtc, &dev->mode_config.crtc_list, head) {
+	for_each_crtc(dev, crtc) {
 		if (!crtc->primary->fb)
 			continue;
 
@@ -8705,7 +8705,7 @@ void intel_mark_fb_busy(struct drm_i915_gem_object *obj,
 	if (!i915.powersave)
 		return;
 
-	list_for_each_entry(crtc, &dev->mode_config.crtc_list, head) {
+	for_each_crtc(dev, crtc) {
 		if (!crtc->primary->fb)
 			continue;
 
@@ -10329,7 +10329,7 @@ static int intel_set_config_save_state(struct drm_device *dev,
 	 * restored, not the drivers personal bookkeeping.
 	 */
 	count = 0;
-	list_for_each_entry(crtc, &dev->mode_config.crtc_list, head) {
+	for_each_crtc(dev, crtc) {
 		config->save_crtc_enabled[count++] = crtc->enabled;
 	}
 
@@ -12040,7 +12040,7 @@ void intel_modeset_gem_init(struct drm_device *dev)
 	 * for this.
 	 */
 	mutex_lock(&dev->struct_mutex);
-	list_for_each_entry(c, &dev->mode_config.crtc_list, head) {
+	for_each_crtc(dev, c) {
 		if (!c->primary->fb)
 			continue;
 
@@ -12086,7 +12086,7 @@ void intel_modeset_cleanup(struct drm_device *dev)
 
 	intel_unregister_dsm_handler();
 
-	list_for_each_entry(crtc, &dev->mode_config.crtc_list, head) {
+	for_each_crtc(dev, crtc) {
 		/* Skip inactive CRTCs */
 		if (!crtc->primary->fb)
 			continue;
