@@ -390,7 +390,7 @@ static bool intel_fb_initial_config(struct drm_fb_helper *fb_helper,
 		/* No preferred mode marked by the EDID? Are there any modes? */
 		if (!modes[i] && !list_empty(&connector->modes)) {
 			DRM_DEBUG_KMS("using first mode listed on connector %s\n",
-				      drm_get_connector_name(connector));
+				      connector->name);
 			modes[i] = list_first_entry(&connector->modes,
 						    struct drm_display_mode,
 						    head);
